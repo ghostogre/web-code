@@ -1,10 +1,4 @@
-body {
-  margin: 0;
-}
-
-* {
-  box-sizing: border-box;
-}
+@import './base.scss';
 
 .tabbar-theme {
   background: #F63515;
@@ -12,4 +6,16 @@ body {
 
 .white {
   color: white;
+}
+
+.flex-row {
+  display: flex;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
 }
