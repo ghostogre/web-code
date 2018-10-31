@@ -1,14 +1,18 @@
 <template>
-  <div class="tabbar-theme white flex-row align-center" id="top-nav">
+  <header :class="[isScroll && 'tabbar-theme', 'white', 'flex-row', 'align-center']" id="top-nav">
     <span></span>
-    <div></div>
+    <form action="#"></form>
     <div>登录</div>
-  </div>
+  </header>
 </template>
 
 <script>
 export default {
-  name: 'm-head'
+  name: 'm-head',
+  props: {
+    isScroll: Boolean,
+    default: false
+  }
 }
 </script>
 
@@ -27,6 +31,10 @@ export default {
       margin: 0 0 0 15px;
       background: url(../assets/common/bars.png) no-repeat;
       background-size: 100% 100%;
+    }
+
+    form {
+
     }
   }
 </style>
