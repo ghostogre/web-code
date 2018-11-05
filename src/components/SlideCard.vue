@@ -70,10 +70,10 @@ export default {
     }
   },
   computed: {
-    // 划出面积比例 $el: Vue 实例使用的根 DOM 元素。
+    // 划出面积比例 $el: Vue 实例使用的根 DOM 元素。只能在根实例上使用。
     offsetRatio () {
-      let width = this.$el.offsetWidth
-      let height = this.$el.offsetHeight
+      let width = document.querySelector('body').offsetWidth
+      let height = document.querySelector('body').offsetHeight
       let offsetWidth = width - Math.abs(this.temporaryData.poswidth)
       let offsetHeight = height - Math.abs(this.temporaryData.posheight)
       let ratio = 1 - (offsetWidth * offsetHeight) / (width * height) || 0
@@ -81,7 +81,7 @@ export default {
     },
     // 划出宽度比例
     offsetWidthRatio () {
-      let width = this.$el.offsetWidth
+      let width = document.querySelector('body').offsetWidth
       let offsetWidth = width - Math.abs(this.temporaryData.poswidth)
       let ratio = 1 - offsetWidth / width || 0
       return ratio
