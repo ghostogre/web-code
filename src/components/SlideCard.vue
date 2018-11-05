@@ -1,5 +1,5 @@
 <template>
-  <ul class="stack">
+  <ul class="stack" ref="slideUI" :style="{width: width + 'px', height: height + 'px'}">
     <li
       class="stack-item"
       v-for="(item, index) in pages"
@@ -30,6 +30,14 @@ export default {
       default: function () {
         return {}
       }
+    },
+    width: {
+      type: Number,
+      default: 300
+    },
+    height: {
+      type: Number,
+      default: 300
     }
   },
   data () {
@@ -45,10 +53,10 @@ export default {
       basicdata: {
         start: {}, // 起始位置
         end: {}, // 结束位置
-        currentPage: 0 // 默认首图的序列
+        currentPage: 0 // 当前展示的第一张图片
       },
-      // temporaryData数据包含组件临时数据
-      temporaryData: {
+      // tempdata数据包含组件临时数据
+      tempdata: {
         prefixes: detectPrefixes(),
         offsetY: '',
         poswidth: '', // 记录位移
@@ -69,139 +77,103 @@ export default {
       }
     }
   },
+
+  created () {
+    // 初始化大小
+  },
+
   computed: {
-    // 划出面积比例 $el: Vue 实例使用的根 DOM 元素。只能在根实例上使用。
+    // 划出面积 比例
     offsetRatio () {
-      let width = document.querySelector('body').offsetWidth
-      let height = document.querySelector('body').offsetHeight
-      let offsetWidth = width - Math.abs(this.temporaryData.poswidth)
-      let offsetHeight = height - Math.abs(this.temporaryData.posheight)
+      let width = this.$parent.offsetWidth
+      let height = this.$parent.offsetHeight
+      let offsetWidth = width - Math.abs(this.tempdata.poswidth)
+      let offsetHeight = height - Math.abs(this.tempdata.posheight)
       let ratio = 1 - (offsetWidth * offsetHeight) / (width * height) || 0
       return ratio > 1 ? 1 : ratio
     },
-    // 划出宽度比例
+    // 划出宽度 比例
     offsetWidthRatio () {
-      let width = document.querySelector('body').offsetWidth
-      let offsetWidth = width - Math.abs(this.temporaryData.poswidth)
+      let width = this.$parent.offsetWidth
+      let offsetWidth = width - Math.abs(this.tempdata.poswidth)
       let ratio = 1 - offsetWidth / width || 0
       return ratio
     }
   },
 
   mounted () {
-    // 绑定事件
+    // 绑定提供给外部调用的事件
     this.$on('next', () => {
       this.next()
     })
     this.$on('prev', () => {
       this.prev()
     })
-    document.addEventListener('touchmove', (e) => {
-      e.preventDefault()
-    })
   },
 
   methods: {
     // 变换卡片
     transform (index) {
-      // let currentPage = this.basicdata.currentPage
-      // if (index > currentPage) {
-      //   let style = {}
-      //   let visible = 3
-      //   let perIndex = index - currentPage
-      //   // visible可见数量前滑块的样式
-      //   if (index <= currentPage + visible - 1) {
-      //     style['opacity'] = '1'
-      //     style['transform'] = `translate3D(0, 0, ${-1 * perIndex * 60}px)`
-      //     style['zIndex'] = visible - index + currentPage
-      //     style['transitionTimingFunction'] = 'ease'
-      //     style['transitionDuration'] = 300 + 'ms'
-      //   } else {
-      //     style['zIndex'] = '-1'
-      //     style['transform'] = `translate3D(0, 0, ${-1 * visible * 60}px)`
-      //   }
-      //   return style
-      // } else if (index === currentPage - 1) {
-      //   // 已滑动模块释放后
-      //   let style = {}
-      //   // 继续执行动画
-      //   style['transform'] = `translate3D(${this.temporaryData.lastPosWidth}px, ${this.temporaryData.lastPosHeight}px, 0px)`
-      //   style['opacity'] = '0'
-      //   style['zIndex'] = '-1'
-      //   style['transitionTimingFunction'] = 'ease'
-      //   style['transitionDuration'] = 300 + 'ms'
-      //   return style
-      // } else if (index === currentPage) {
-      //   // 首页，处理3D效果
-      //   let style = {}
-      //   style['transform'] = `translate3D(${this.temporaryData.poswidth}px, ${this.temporaryData.posheight}px, 0px)`
-      //   style['opacity'] = this.temporaryData.opacity
-      //   style['zIndex'] = 10
-      //   if (this.temporaryData.animation) {
-      //     style['transitionTimingFunction'] = 'ease'
-      //     style['transitionDuration'] = 300 + 'ms'
-      //   }
-      //   return style
-      // }
-      let currentPage = this.temporaryData.currentPage
+      let currentPage = this.tempdata.currentPage
       let length = this.pages.length
-      let lastPage = currentPage === 0 ? this.pages.length - 1 : currentPage - 1
+      // 设置上一张
+      let lastPage = currentPage === 0 ? length - 1 : currentPage - 1
       let style = {}
-      let visible = this.temporaryData.visible
-      if (index === this.temporaryData.currentPage) {
+      let visible = this.tempdata.visible // 可见层数
+      if (index === this.tempdata.currentPage) {
         return
       }
-      if (this.inStack(index, currentPage)) {
-        let perIndex = index - currentPage > 0 ? index - currentPage : index - currentPage + length
+      if (this.findStack(index, currentPage)) { // 显示中图片
+        let perIndex = index - currentPage > 0 ? index - currentPage : index - currentPage + length // 和前面间隔层数
         style['opacity'] = '1'
-        style['transform'] = 'translate3D(0,0,' + -1 * 60 * (perIndex - this.offsetRatio) + 'px' + ')'
+        style['transform'] = `translate3D(0, 0, ${-1 * 60 * (perIndex - this.offsetRatio)}px)`
         style['zIndex'] = visible - perIndex
-        if (!this.temporaryData.tracking) {
-          style[this.temporaryData.prefixes.transition + 'TimingFunction'] = 'ease'
-          style[this.temporaryData.prefixes.transition + 'Duration'] = 300 + 'ms'
+        if (!this.tempdata.tracking) {
+          // 兼容前缀
+          style[this.tempdata.prefixes.transition + 'TimingFunction'] = 'ease'
+          style[this.tempdata.prefixes.transition + 'Duration'] = 300 + 'ms'
         }
-      } else if (index === lastPage) {
-        style['transform'] = 'translate3D(' + this.temporaryData.lastPosWidth + 'px' + ',' + this.temporaryData.lastPosHeight + 'px' + ',0px) ' + 'rotate(' + this.temporaryData.lastRotate + 'deg)'
-        style['opacity'] = this.temporaryData.lastOpacity
-        style['zIndex'] = this.temporaryData.lastZindex
-        style[this.temporaryData.prefixes.transition + 'TimingFunction'] = 'ease'
-        style[this.temporaryData.prefixes.transition + 'Duration'] = 300 + 'ms'
+      } else if (index === lastPage) { // 设置翻过去的页
+        style['transform'] = `translate3D(${this.tempdata.lastPosWidth}px, ${this.tempdata.lastPosHeight}px, 0px) rotate(${this.tempdata.lastRotate}deg)`
+        style['opacity'] = this.tempdata.lastOpacity
+        style['zIndex'] = this.tempdata.lastZindex
+        style[this.tempdata.prefixes.transition + 'TimingFunction'] = 'ease'
+        style[this.tempdata.prefixes.transition + 'Duration'] = 300 + 'ms'
       } else {
         style['zIndex'] = '-1'
-        style['transform'] = 'translate3D(0,0,' + -1 * visible * 60 + 'px' + ')'
+        style['transform'] = `translate3D(0, 0, ${-1 * visible * 60}px)`
       }
       return style
     },
 
     touchmove (e) {
       // 记录滑动位置
-      if (this.temporaryData.tracking && !this.temporaryData.animation) {
-        if (e.type === 'touchmove') {
-          e.preventDefault()
+      if (this.tempdata.tracking && !this.tempdata.animation) {
+        if (e.type === 'touchmove') { // 判断电脑和手机
           this.basicdata.end.x = e.targetTouches[0].clientX
           this.basicdata.end.y = e.targetTouches[0].clientY
         } else {
-          e.preventDefault()
           this.basicdata.end.x = e.clientX
           this.basicdata.end.y = e.clientY
         }
         // 计算滑动值
-        this.temporaryData.poswidth = this.basicdata.end.x - this.basicdata.start.x
-        this.temporaryData.posheight = this.basicdata.end.y - this.basicdata.start.y
+        this.tempdata.poswidth = this.basicdata.end.x - this.basicdata.start.x
+        this.tempdata.posheight = this.basicdata.end.y - this.basicdata.start.y
+        // 计算翻转角度
         let rotateDirection = this.rotateDirection()
         let angleRatio = this.angleRatio()
-        this.temporaryData.rotate = rotateDirection * this.offsetWidthRatio * 15 * angleRatio
+        this.tempdata.rotate = rotateDirection * this.offsetWidthRatio * 15 * angleRatio
       }
     },
 
     touchstart (e) {
-      if (this.temporaryData.tracking) {
+      if (this.tempdata.tracking) {
         return
       }
       // 是否为touch
       if (e.type === 'touchstart') {
         if (e.touches.length > 1) {
-          this.temporaryData.tracking = false
+          this.tempdata.tracking = false
           return
         } else {
           // 记录起始位置
@@ -211,7 +183,8 @@ export default {
           this.basicdata.end.x = e.targetTouches[0].clientX
           this.basicdata.end.y = e.targetTouches[0].clientY
           // offsetY在touch事件中没有，只能自己计算
-          this.temporaryData.offsetY = e.targetTouches[0].pageY - this.$el.offsetParent.offsetTop
+          this.tempdata.offsetY = e.targetTouches[0].pageY - this.$refs.slideUI.offsetTop
+          console.log(this.tempdata.offsetY)
         }
       // pc操作
       } else {
@@ -220,136 +193,110 @@ export default {
         this.basicdata.start.y = e.clientY
         this.basicdata.end.x = e.clientX
         this.basicdata.end.y = e.clientY
-        this.temporaryData.offsetY = e.offsetY
+        this.tempdata.offsetY = e.offsetY
       }
-      this.temporaryData.tracking = true
-      this.temporaryData.animation = false
+      this.tempdata.tracking = true
+      this.tempdata.animation = false
     },
 
     touchend (e) {
-      this.temporaryData.tracking = false
-      this.temporaryData.animation = true
-      // // 滑动结束，触发判断
-      // // 简单判断滑动宽度/高度超出100像素时触发滑出
-      // if (Math.abs(this.temporaryData.poswidth) >= 100 || Math.abs(this.temporaryData.posheight) >= 100) {
-      //   // 最终位移简单设定为x轴1200像素的偏移
-      //   let ratio = Math.abs(this.temporaryData.posheight / this.temporaryData.poswidth)
-      //   this.temporaryData.poswidth = this.temporaryData.poswidth >= 0 ? 1980 : -1980
-      //   this.temporaryData.posheight = this.temporaryData.posheight >= 0 ? Math.abs(this.temporaryData.poswidth * ratio) : -Math.abs(this.temporaryData.poswidth * ratio)
-
-      //   this.temporaryData.opacity = 0
-      //   this.temporaryData.swipe = true
-      //   // 记录最终滑动距离
-      //   this.temporaryData.lastPosWidth = this.temporaryData.poswidth
-      //   this.temporaryData.lastPosHeight = this.temporaryData.posheight
-      //   // currentPage+1 引发排序变化
-      //   this.basicdata.currentPage += 1
-      //   // currentPage切换，整体dom进行变化，把第一层滑动置零
-      //   this.$nextTick(() => {
-      //     this.temporaryData.poswidth = 0
-      //     this.temporaryData.posheight = 0
-      //     this.temporaryData.opacity = 1
-      //   })
-      // // 不满足条件则滑入
-      // } else {
-      //   this.temporaryData.poswidth = 0
-      //   this.temporaryData.posheight = 0
-      //   this.temporaryData.swipe = false
-      // }
-      // 滑动结束，触发判断
-      // 判断划出面积是否大于0.4
+      this.tempdata.tracking = false
+      this.tempdata.animation = true
       if (this.offsetRatio >= 0.4) {
         // 计算划出后最终位置
-        let ratio = Math.abs(this.temporaryData.posheight / this.temporaryData.poswidth)
-        this.temporaryData.poswidth = this.temporaryData.poswidth >= 0 ? this.temporaryData.poswidth + 200 : this.temporaryData.poswidth - 200
-        this.temporaryData.posheight = this.temporaryData.posheight >= 0 ? Math.abs(this.temporaryData.poswidth * ratio) : -Math.abs(this.temporaryData.poswidth * ratio)
-        this.temporaryData.opacity = 0
-        this.temporaryData.swipe = true
+        let ratio = Math.abs(this.tempdata.posheight / this.tempdata.poswidth)
+        this.tempdata.poswidth = this.tempdata.poswidth >= 0 ? this.tempdata.poswidth + 200 : this.tempdata.poswidth - 200
+        this.tempdata.posheight = this.tempdata.posheight >= 0 ? Math.abs(this.tempdata.poswidth * ratio) : -Math.abs(this.tempdata.poswidth * ratio)
+        this.tempdata.opacity = 0
+        this.tempdata.swipe = true
         this.nextTick()
       // 不满足条件则滑入
       } else {
-        this.temporaryData.poswidth = 0
-        this.temporaryData.posheight = 0
-        this.temporaryData.swipe = false
-        this.temporaryData.rotate = 0
+        this.tempdata.poswidth = 0
+        this.tempdata.posheight = 0
+        this.tempdata.swipe = false
+        this.tempdata.rotate = 0
       }
     },
 
     nextTick () {
       // 记录最终滑动距离
-      this.temporaryData.lastPosWidth = this.temporaryData.poswidth
-      this.temporaryData.lastPosHeight = this.temporaryData.posheight
-      this.temporaryData.lastRotate = this.temporaryData.rotate
-      this.temporaryData.lastZindex = 20
+      this.tempdata.lastPosWidth = this.tempdata.poswidth
+      this.tempdata.lastPosHeight = this.tempdata.posheight
+      this.tempdata.lastRotate = this.tempdata.rotate
+      this.tempdata.lastZindex = 20
       // 循环currentPage
-      this.temporaryData.currentPage = this.temporaryData.currentPage === this.pages.length - 1 ? 0 : this.temporaryData.currentPage + 1
+      this.tempdata.currentPage = this.tempdata.currentPage === this.pages.length - 1 ? 0 : this.tempdata.currentPage + 1
       // currentPage切换，整体dom进行变化，把第一层滑动置最低
       this.$nextTick(() => {
-        this.temporaryData.poswidth = 0
-        this.temporaryData.posheight = 0
-        this.temporaryData.opacity = 1
-        this.temporaryData.rotate = 0
+        this.tempdata.poswidth = 0
+        this.tempdata.posheight = 0
+        this.tempdata.opacity = 1
+        this.tempdata.rotate = 0
       })
     },
 
     onTransitionEnd (index) {
-      let lastPage = this.temporaryData.currentPage === 0 ? this.pages.length - 1 : this.temporaryData.currentPage - 1
+      let lastPage = this.tempdata.currentPage === 0 ? this.pages.length - 1 : this.tempdata.currentPage - 1
       // dom发生变化正在执行的动画滑动序列已经变为上一层
-      if (this.temporaryData.swipe && index === lastPage) {
-        this.temporaryData.animation = true
-        this.temporaryData.lastPosWidth = 0
-        this.temporaryData.lastPosHeight = 0
-        this.temporaryData.lastOpacity = 0
-        this.temporaryData.lastRotate = 0
-        this.temporaryData.swipe = false
-        this.temporaryData.lastZindex = -1
+      if (this.tempdata.swipe && index === lastPage) {
+        this.tempdata.animation = true
+        this.tempdata.lastPosWidth = 0
+        this.tempdata.lastPosHeight = 0
+        this.tempdata.lastOpacity = 0
+        this.tempdata.lastRotate = 0
+        this.tempdata.swipe = false
+        this.tempdata.lastZindex = -1
       }
     },
 
     prev () {
-      this.temporaryData.tracking = false
-      this.temporaryData.animation = true
+      this.tempdata.tracking = false
+      this.tempdata.animation = true
       // 计算划出后最终位置
-      let width = this.$el.offsetWidth
-      this.temporaryData.poswidth = -width
-      this.temporaryData.posheight = 0
-      this.temporaryData.opacity = 0
-      this.temporaryData.rotate = '-3'
-      this.temporaryData.swipe = true
+      let width = this.$parent.offsetWidth
+      this.tempdata.poswidth = -width
+      this.tempdata.posheight = 0
+      this.tempdata.opacity = 0
+      this.tempdata.rotate = '-3'
+      this.tempdata.swipe = true
       this.nextTick()
     },
 
     next () {
-      this.temporaryData.tracking = false
-      this.temporaryData.animation = true
+      this.tempdata.tracking = false
+      this.tempdata.animation = true
       // 计算划出后最终位置
-      let width = this.$el.offsetWidth
-      this.temporaryData.poswidth = width
-      this.temporaryData.posheight = 0
-      this.temporaryData.opacity = 0
-      this.temporaryData.rotate = '3'
-      this.temporaryData.swipe = true
+      let width = this.$parent.offsetWidth
+      this.tempdata.poswidth = width
+      this.tempdata.posheight = 0
+      this.tempdata.opacity = 0
+      this.tempdata.rotate = '3'
+      this.tempdata.swipe = true
       this.nextTick()
     },
 
+    // 翻转方向
     rotateDirection () {
-      if (this.temporaryData.poswidth <= 0) {
+      if (this.tempdata.poswidth <= 0) {
         return -1
       } else {
         return 1
       }
     },
 
+    // 翻转角度
     angleRatio () {
-      let height = this.$el.offsetHeight
-      let offsetY = this.temporaryData.offsetY
+      let height = this.$parent.offsetHeight
+      let offsetY = this.tempdata.offsetY
       let ratio = -1 * (2 * offsetY / height - 1)
       return ratio || 0
     },
 
-    inStack (index, currentPage) {
+    // 判断当前是否在显示中
+    findStack (index, currentPage) {
       let stack = []
-      let visible = this.temporaryData.visible
+      let visible = this.tempdata.visible
       let length = this.pages.length
       for (let i = 0; i < visible; i++) {
         if (currentPage + i < length) {
@@ -363,14 +310,14 @@ export default {
 
     // 首页样式切换
     transformIndex (index) {
-      if (index === this.temporaryData.currentPage) {
+      if (index === this.tempdata.currentPage) {
         let style = {}
-        style['transform'] = 'translate3D(' + this.temporaryData.poswidth + 'px' + ',' + this.temporaryData.posheight + 'px' + ',0px) ' + 'rotate(' + this.temporaryData.rotate + 'deg)'
-        style['opacity'] = this.temporaryData.opacity
+        style['transform'] = 'translate3D(' + this.tempdata.poswidth + 'px' + ',' + this.tempdata.posheight + 'px' + ',0px) ' + 'rotate(' + this.tempdata.rotate + 'deg)'
+        style['opacity'] = this.tempdata.opacity
         style['zIndex'] = 10
-        if (this.temporaryData.animation) {
-          style[this.temporaryData.prefixes.transition + 'TimingFunction'] = 'ease'
-          style[this.temporaryData.prefixes.transition + 'Duration'] = (this.temporaryData.animation ? 300 : 0) + 'ms'
+        if (this.tempdata.animation) {
+          style[this.tempdata.prefixes.transition + 'TimingFunction'] = 'ease'
+          style[this.tempdata.prefixes.transition + 'Duration'] = (this.tempdata.animation ? 300 : 0) + 'ms'
         }
         return style
       }
@@ -381,8 +328,6 @@ export default {
 
 <style lang="scss" scoped>
   .stack {
-    width: 100%;
-    height: 100%;
     position: relative;
     perspective: 1000px; //子元素视距
     perspective-origin: 50% 150%; //子元素透视位置
