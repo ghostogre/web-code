@@ -183,7 +183,7 @@ export default {
           this.basicdata.end.x = e.targetTouches[0].clientX
           this.basicdata.end.y = e.targetTouches[0].clientY
           // offsetY在touch事件中没有，只能自己计算
-          this.tempdata.offsetY = e.targetTouches[0].pageY - this.$refs.slideUI.offsetTop
+          this.tempdata.offsetY = e.targetTouches[0].pageY - this.$parent.offsetTop
           console.log(this.tempdata.offsetY)
         }
       // pc操作
