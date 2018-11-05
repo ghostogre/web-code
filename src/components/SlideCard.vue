@@ -89,6 +89,7 @@ export default {
       let height = this.$parent.offsetHeight
       let offsetWidth = width - Math.abs(this.tempdata.poswidth)
       let offsetHeight = height - Math.abs(this.tempdata.posheight)
+      console.log(width, height, offsetWidth, offsetHeight)
       let ratio = 1 - (offsetWidth * offsetHeight) / (width * height) || 0
       return ratio > 1 ? 1 : ratio
     },
@@ -164,6 +165,7 @@ export default {
         let angleRatio = this.angleRatio()
         this.tempdata.rotate = rotateDirection * this.offsetWidthRatio * 15 * angleRatio
       }
+      console.log('ratio' + this.offsetRatio)
     },
 
     touchstart (e) {
@@ -183,8 +185,8 @@ export default {
           this.basicdata.end.x = e.targetTouches[0].clientX
           this.basicdata.end.y = e.targetTouches[0].clientY
           // offsetY在touch事件中没有，只能自己计算
-          this.tempdata.offsetY = e.targetTouches[0].pageY - this.$parent.offsetTop
-          console.log(this.tempdata.offsetY)
+          this.tempdata.offsetY = e.targetTouches[0].pageY - this.$parent.offsetTop * 1
+          console.log(e.targetTouches[0].pageY, this.tempdata.offsetY, this.$parent.offsetTop)
         }
       // pc操作
       } else {
