@@ -1,10 +1,10 @@
 <template>
-  <ul class="stack" ref="slideUI" :style="{width: width + 'px', height: height + 'px'}">
+  <ul class="stack column align-center" id="my-slide-stack">
     <li
       class="stack-item"
       v-for="(item, index) in pages"
       :key="index"
-      :style="[transformIndex(index), transform(index)]"
+      :style="[transformIndex(index), transform(index), {width: width + 'px', height: height + 'px'}]"
       @touchstart.stop.capture.prevent="touchstart"
       @touchmove.stop.capture.prevent="touchmove"
       @touchend.stop.capture.prevent="touchend"
@@ -44,10 +44,10 @@ export default {
     return {
       pages: [
         'http://loftcn.com/wp-content/uploads/2018/10/modern-cafe-1.jpg',
-        'http://loftcn.com/wp-content/uploads/2018/10/modern-cafe-2.jpg',
-        'http://loftcn.com/wp-content/uploads/2018/10/modern-cafe-3.jpg',
-        'http://loftcn.com/wp-content/uploads/2018/10/modern-cafe-4.jpg',
-        'http://loftcn.com/wp-content/uploads/2018/10/modern-cafe-5.jpg'
+        'https://wx3.sinaimg.cn/mw690/a0fae7b2gy1fwxpff0h8xj20l20jgnaa.jpg',
+        'https://wx2.sinaimg.cn/mw690/a0fae7b2gy1fwxpff0vwdj20lo0i2dod.jpg',
+        'https://wx2.sinaimg.cn/mw690/a0fae7b2gy1fwxpff1kdcj20j80kun83.jpg',
+        'https://wx3.sinaimg.cn/mw690/9ccc7942gy1fwx0ga5rahj20jl0d2whz.jpg'
       ],
       // basicdata数据包含组件基本数据
       basicdata: {
@@ -74,7 +74,10 @@ export default {
         currentPage: this.init.currentPage || 0,
         lastOpacity: 0,
         zIndex: 10
-      }
+      },
+      parentWidth: 0,
+      parentHeight: 0,
+      parentTop: 0
     }
   },
 
@@ -85,17 +88,17 @@ export default {
   computed: {
     // 划出面积 比例
     offsetRatio () {
-      let width = this.$parent.offsetWidth
-      let height = this.$parent.offsetHeight
+      // 直接获取dom会得到null, 父节点宽高不会变，没必要放在计算属性里面，先给个默认值！
+      let width = this.parentWidth
+      let height = this.parentHeight
       let offsetWidth = width - Math.abs(this.tempdata.poswidth)
       let offsetHeight = height - Math.abs(this.tempdata.posheight)
-      console.log(width, height, offsetWidth, offsetHeight)
       let ratio = 1 - (offsetWidth * offsetHeight) / (width * height) || 0
       return ratio > 1 ? 1 : ratio
     },
     // 划出宽度 比例
     offsetWidthRatio () {
-      let width = this.$parent.offsetWidth
+      let width = this.parentWidth
       let offsetWidth = width - Math.abs(this.tempdata.poswidth)
       let ratio = 1 - offsetWidth / width || 0
       return ratio
@@ -110,6 +113,10 @@ export default {
     this.$on('prev', () => {
       this.prev()
     })
+    let parentNode = document.getElementById('#my-slide-stack').parentElement
+    this.parentWidth = parentNode.offsetWidth
+    this.parentHeight = parentNode.offsetHeight
+    this.parentTop = parentNode.offsetTop
   },
 
   methods: {
@@ -165,7 +172,6 @@ export default {
         let angleRatio = this.angleRatio()
         this.tempdata.rotate = rotateDirection * this.offsetWidthRatio * 15 * angleRatio
       }
-      console.log('ratio' + this.offsetRatio)
     },
 
     touchstart (e) {
@@ -185,8 +191,7 @@ export default {
           this.basicdata.end.x = e.targetTouches[0].clientX
           this.basicdata.end.y = e.targetTouches[0].clientY
           // offsetY在touch事件中没有，只能自己计算
-          this.tempdata.offsetY = e.targetTouches[0].pageY - this.$parent.offsetTop * 1
-          console.log(e.targetTouches[0].pageY, this.tempdata.offsetY, this.$parent.offsetTop)
+          this.tempdata.offsetY = e.targetTouches[0].pageY - this.parentTop * 1
         }
       // pc操作
       } else {
@@ -256,7 +261,7 @@ export default {
       this.tempdata.tracking = false
       this.tempdata.animation = true
       // 计算划出后最终位置
-      let width = this.$parent.offsetWidth
+      let width = this.parentWidth
       this.tempdata.poswidth = -width
       this.tempdata.posheight = 0
       this.tempdata.opacity = 0
@@ -269,7 +274,7 @@ export default {
       this.tempdata.tracking = false
       this.tempdata.animation = true
       // 计算划出后最终位置
-      let width = this.$parent.offsetWidth
+      let width = this.parentWidth
       this.tempdata.poswidth = width
       this.tempdata.posheight = 0
       this.tempdata.opacity = 0
@@ -289,7 +294,7 @@ export default {
 
     // 翻转角度
     angleRatio () {
-      let height = this.$parent.offsetHeight
+      let height = this.parentHeight
       let offsetY = this.tempdata.offsetY
       let ratio = -1 * (2 * offsetY / height - 1)
       return ratio || 0
@@ -335,6 +340,8 @@ export default {
     perspective-origin: 50% 150%; //子元素透视位置
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .stack-item{

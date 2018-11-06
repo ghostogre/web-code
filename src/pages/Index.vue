@@ -1,7 +1,7 @@
 <template>
   <div class="column">
     <m-head></m-head>
-    <div id="slide-wrapper" class="column align-center">
+    <div id="slide-wrapper">
       <slide-card></slide-card>
     </div>
     <m-footer></m-footer>
@@ -28,6 +28,5 @@ export default {
   #slide-wrapper {
     width: 100%;
     height: 800px;
-    overflow: hidden;
   }
 </style>
