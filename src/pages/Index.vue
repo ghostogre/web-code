@@ -27,7 +27,7 @@ export default {
 <style lang="scss" scoped>
   #slide-wrapper {
     width: 100%;
-    height: 750px;
+    height: 825px;
     overflow: hidden;
     justify-content: center;
     background-color: #565f77;
