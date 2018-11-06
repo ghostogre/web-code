@@ -158,7 +158,7 @@ export default {
         style[this.tempdata.prefixes.transition + 'Duration'] = 300 + 'ms'
       } else {
         style['zIndex'] = '-1'
-        style['transform'] = `translate3D(0, 0, ${-1 * visible * 60 / this.px2rem}px)`
+        style['transform'] = `translate3D(0, 0, ${-1 * visible * 60 / this.px2rem}rem)`
       }
       return style
     },
