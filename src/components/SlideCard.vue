@@ -1,10 +1,10 @@
 <template>
-  <ul class="stack column align-center" id="my-slide-stack">
+  <ul class="stack column" ref="mySlideStack" :style="{width: width/px2rem + 'rem', height: height/px2rem + 'rem'}">
     <li
       class="stack-item"
       v-for="(item, index) in pages"
       :key="index"
-      :style="[transformIndex(index), transform(index), {width: width + 'px', height: height + 'px'}]"
+      :style="[transformIndex(index), transform(index), {width: width/px2rem + 'rem', height: height/px2rem + 'rem'}]"
       @touchstart.stop.capture.prevent="touchstart"
       @touchmove.stop.capture.prevent="touchmove"
       @touchend.stop.capture.prevent="touchend"
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+// js里的px需要手动转换成rem,移动的时候不需要转换成rem，因为那是运行时计算的
+import {mapGetters} from 'vuex'
 import detectPrefixes from '../utils/detect-prefixes.js'
 export default {
   name: 'slide-card',
@@ -43,11 +45,11 @@ export default {
   data () {
     return {
       pages: [
-        'http://loftcn.com/wp-content/uploads/2018/10/modern-cafe-1.jpg',
-        'https://wx3.sinaimg.cn/mw690/a0fae7b2gy1fwxpff0h8xj20l20jgnaa.jpg',
-        'https://wx2.sinaimg.cn/mw690/a0fae7b2gy1fwxpff0vwdj20lo0i2dod.jpg',
-        'https://wx2.sinaimg.cn/mw690/a0fae7b2gy1fwxpff1kdcj20j80kun83.jpg',
-        'https://wx3.sinaimg.cn/mw690/9ccc7942gy1fwx0ga5rahj20jl0d2whz.jpg'
+        'http://n.sinaimg.cn/photo/transform/700/w1000h500/20181101/3mNr-hnfikve2378424.jpg',
+        'http://n.sinaimg.cn/news/transform/700/w1000h500/20181105/X9dA-hnknmqx1182592.jpg',
+        'http://n.sinaimg.cn/news/transform/700/w1000h500/20181105/LBZP-hnknmqx2582350.jpg',
+        'http://n.sinaimg.cn/news/transform/700/w1000h500/20181026/y-IB-hmxrkzx0888056.jpg',
+        'http://n.sinaimg.cn/news/transform/700/w1000h500/20181105/5vqb-hnknmqx2579043.jpg'
       ],
       // basicdata数据包含组件基本数据
       basicdata: {
@@ -75,8 +77,8 @@ export default {
         lastOpacity: 0,
         zIndex: 10
       },
-      parentWidth: 0,
-      parentHeight: 0,
+      parentWidth: 300,
+      parentHeight: 300,
       parentTop: 0
     }
   },
@@ -86,6 +88,9 @@ export default {
   },
 
   computed: {
+    ...mapGetters([
+      'px2rem'
+    ]),
     // 划出面积 比例
     offsetRatio () {
       // 直接获取dom会得到null, 父节点宽高不会变，没必要放在计算属性里面，先给个默认值！
@@ -113,10 +118,13 @@ export default {
     this.$on('prev', () => {
       this.prev()
     })
-    let parentNode = document.getElementById('#my-slide-stack').parentElement
-    this.parentWidth = parentNode.offsetWidth
-    this.parentHeight = parentNode.offsetHeight
-    this.parentTop = parentNode.offsetTop
+    this.$nextTick(() => {
+      // let parentNode = document.getElementById('#my-slide-stack').parentElement // 会有null的情况
+      let parentNode = this.$refs.mySlideStack.parentElement // 如果在普通的 DOM 元素上使用，引用指向的就是 DOM 元素；如果用在子组件上，引用就指向组件实例
+      this.parentWidth = parentNode.offsetWidth * 1
+      this.parentHeight = parentNode.offsetHeight * 1
+      this.parentTop = parentNode.offsetTop * 1
+    })
   },
 
   methods: {
@@ -134,7 +142,8 @@ export default {
       if (this.findStack(index, currentPage)) { // 显示中图片
         let perIndex = index - currentPage > 0 ? index - currentPage : index - currentPage + length // 和前面间隔层数
         style['opacity'] = '1'
-        style['transform'] = `translate3D(0, 0, ${-1 * 60 * (perIndex - this.offsetRatio)}px)`
+        // 根据划出比例
+        style['transform'] = `translate3D(0, 0, ${-1 * 60 * (perIndex - this.offsetRatio) / this.px2rem}rem)`
         style['zIndex'] = visible - perIndex
         if (!this.tempdata.tracking) {
           // 兼容前缀
@@ -149,7 +158,7 @@ export default {
         style[this.tempdata.prefixes.transition + 'Duration'] = 300 + 'ms'
       } else {
         style['zIndex'] = '-1'
-        style['transform'] = `translate3D(0, 0, ${-1 * visible * 60}px)`
+        style['transform'] = `translate3D(0, 0, ${-1 * visible * 60 / this.px2rem}px)`
       }
       return style
     },
@@ -191,7 +200,7 @@ export default {
           this.basicdata.end.x = e.targetTouches[0].clientX
           this.basicdata.end.y = e.targetTouches[0].clientY
           // offsetY在touch事件中没有，只能自己计算
-          this.tempdata.offsetY = e.targetTouches[0].pageY - this.parentTop * 1
+          this.tempdata.offsetY = e.targetTouches[0].pageY - this.parentTop
         }
       // pc操作
       } else {
@@ -340,19 +349,18 @@ export default {
     perspective-origin: 50% 150%; //子元素透视位置
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
   }
 
   .stack-item{
     position: absolute;
-    top: 0;
     background: #fff;
     height: 100%;
     width: 100%;
     border-radius: 4px;
     text-align: center;
     overflow: hidden;
+    user-select: none;
+    // 控制着用户能否选中文本
     img {
       width: 100%;
       height: 100%;
