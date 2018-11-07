@@ -6,6 +6,7 @@ import Vuex from 'vuex'
 import router from './router'
 import config from './vuex'
 import 'amfe-flexible'
+import './sass/common.scss'
 
 Vue.use(Vuex)
 Vue.config.productionTip = false

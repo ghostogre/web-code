@@ -118,6 +118,11 @@ export default {
     this.$on('prev', () => {
       this.prev()
     })
+    document.addEventListener('touchstart', function (e) {
+      e.preventDefault()
+    }, {
+      passive: false
+    })
     this.$nextTick(() => {
       // let parentNode = document.getElementById('#my-slide-stack').parentElement // 会有null的情况
       let parentNode = this.$refs.mySlideStack.parentElement // 如果在普通的 DOM 元素上使用，引用指向的就是 DOM 元素；如果用在子组件上，引用就指向组件实例
@@ -150,7 +155,7 @@ export default {
           style[this.tempdata.prefixes.transition + 'TimingFunction'] = 'ease'
           style[this.tempdata.prefixes.transition + 'Duration'] = 300 + 'ms'
         }
-      } else if (index === lastPage) { // 设置翻过去的页
+      } else if (index === lastPage) { // 设置翻过去的页的动画效果
         style['transform'] = `translate3D(${this.tempdata.lastPosWidth}px, ${this.tempdata.lastPosHeight}px, 0px) rotate(${this.tempdata.lastRotate}deg)`
         style['opacity'] = this.tempdata.lastOpacity
         style['zIndex'] = this.tempdata.lastZindex

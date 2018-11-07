@@ -1,7 +1,9 @@
 <template>
-  <header :class="[isScroll && 'tabbar-theme', 'white', 'flex-row', 'align-center']" id="top-nav">
+  <header :class="['tabbar-theme', 'white', 'flex-row', 'align-center']" id="top-nav">
     <span></span>
-    <form action="#"></form>
+    <form action="#">
+      <div class="header-search-box"></div>
+    </form>
     <div>登录</div>
   </header>
 </template>
@@ -11,7 +13,7 @@ export default {
   name: 'm-head',
   props: {
     isScroll: Boolean,
-    default: false
+    default: true
   }
 }
 </script>
@@ -19,11 +21,12 @@ export default {
 <style lang="scss" scoped>
   #top-nav {
     height: 44px;
-    font-size: 14px;
-    position: sticky;
+    font-size: 16px;
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 999;
+    right: 0;
+    z-index: 15;
 
     & > span {
       width: 20px;
@@ -34,7 +37,7 @@ export default {
     }
 
     form {
-
+      margin: 0 20px 0 50px;
     }
   }
 </style>
