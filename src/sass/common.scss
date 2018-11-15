@@ -1,5 +1,11 @@
 @import './base.scss';
 
+html, body {
+  padding: 0px;
+  margin: 0px;
+  overflow: hidden;
+}
+
 .tabbar-theme {
   background: #F63515;
 }

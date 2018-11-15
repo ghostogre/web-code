@@ -21,6 +21,7 @@
     "element": "^0.1.4",
     "hoek": "^5.0.4",
     "lodash": "^4.17.11",
+    "normalize.css": "^8.0.1",
     "postcss-px2rem": "^0.3.0",
     "pug": "^2.0.3",
     "vue": "^2.5.2",

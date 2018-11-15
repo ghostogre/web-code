@@ -21,7 +21,7 @@ export default {
 <style lang="scss" scoped>
   #top-nav {
     height: 44px;
-    font-size: 16px; /*px*/
+    font-size: 16px;
     position: fixed;
     top: 0;
     left: 0;

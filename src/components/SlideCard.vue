@@ -4,7 +4,7 @@
       class="stack-item"
       v-for="(item, index) in pages"
       :key="index"
-      :style="[transformIndex(index), transform(index), {width: width/px2rem + 'rem', height: height/px2rem + 'rem'}]"
+      :style="[transformIndex(index), transform(index)]"
       @touchstart.stop.capture.prevent="touchstart"
       @touchmove.stop.capture.prevent="touchmove"
       @touchend.stop.capture.prevent="touchend"
@@ -118,7 +118,8 @@ export default {
     this.$on('prev', () => {
       this.prev()
     })
-    document.addEventListener('touchstart', function (e) {
+    this.$refs.mySlideStack.addEventListener('touchstart', function (e) {
+      console.log('yes')
       e.preventDefault()
     }, {
       passive: false
