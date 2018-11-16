@@ -1,18 +1,29 @@
 <template>
-  <ul class="stack column" ref="mySlideStack" :style="{width: width/px2rem + 'rem', height: height/px2rem + 'rem'}">
+  <ul
+    class="stack column"
+    ref="mySlideStack"
+    @touchstart.stop.prevent="stop"
+    @touchmove.stop.prevent="stop"
+    @touchend.stop.prevent="stop"
+    @touchcancel.stop.prevent="stop"
+    @mousedown.stop.prevent="stop"
+    @mouseup.stop.prevent="stop"
+    @mousemove.stop.prevent="stop"
+    @mouseout.stop.prevent="stop"
+    :style="{width: width/px2rem + 'rem', height: height/px2rem + 'rem'}">
     <li
       class="stack-item"
       v-for="(item, index) in pages"
       :key="index"
-      :style="[transformIndex(index), transform(index)]"
-      @touchstart.stop.capture.prevent="touchstart"
-      @touchmove.stop.capture.prevent="touchmove"
-      @touchend.stop.capture.prevent="touchend"
-      @touchcancel.stop.capture.prevent="touchend"
-      @mousedown.stop.capture.prevent="touchstart"
-      @mouseup.stop.capture.prevent="touchend"
-      @mousemove.stop.capture.prevent="touchmove"
-      @mouseout.stop.capture.prevent="touchend"
+      :style="[transform(index)]"
+      @touchstart.capture.prevent="touchstart"
+      @touchmove.capture.prevent="touchmove"
+      @touchend.capture.prevent="touchend"
+      @touchcancel.capture.prevent="touchend"
+      @mousedown.capture.prevent="touchstart"
+      @mouseup.capture.prevent="touchend"
+      @mousemove.capture.prevent="touchmove"
+      @mouseout.capture.prevent="touchend"
       @webkit-transition-end="onTransitionEnd"
       @transitionend="onTransitionEnd">
       <img :src="item">
@@ -118,12 +129,6 @@ export default {
     this.$on('prev', () => {
       this.prev()
     })
-    this.$refs.mySlideStack.addEventListener('touchstart', function (e) {
-      console.log('yes')
-      e.preventDefault()
-    }, {
-      passive: false
-    })
     this.$nextTick(() => {
       // let parentNode = document.getElementById('#my-slide-stack').parentElement // 会有null的情况
       let parentNode = this.$refs.mySlideStack.parentElement // 如果在普通的 DOM 元素上使用，引用指向的就是 DOM 元素；如果用在子组件上，引用就指向组件实例
@@ -134,6 +139,8 @@ export default {
   },
 
   methods: {
+    stop () {
+    },
     // 变换卡片
     transform (index) {
       let currentPage = this.tempdata.currentPage
@@ -142,10 +149,15 @@ export default {
       let lastPage = currentPage === 0 ? length - 1 : currentPage - 1
       let style = {}
       let visible = this.tempdata.visible // 可见层数
-      if (index === this.tempdata.currentPage) {
-        return
-      }
-      if (this.findStack(index, currentPage)) { // 显示中图片
+      if (index === currentPage) { // 首页样式
+        style['transform'] = 'translate3D(' + this.tempdata.poswidth + 'px' + ',' + this.tempdata.posheight + 'px' + ',0px) ' + 'rotate(' + this.tempdata.rotate + 'deg)'
+        style['opacity'] = this.tempdata.opacity
+        style['zIndex'] = 10
+        if (this.tempdata.animation) {
+          style[this.tempdata.prefixes.transition + 'TimingFunction'] = 'ease'
+          style[this.tempdata.prefixes.transition + 'Duration'] = (this.tempdata.animation ? 300 : 0) + 'ms'
+        }
+      } else if (this.findStack(index, currentPage)) { // 显示中图片
         let perIndex = index - currentPage > 0 ? index - currentPage : index - currentPage + length // 和前面间隔层数
         style['opacity'] = '1'
         // 根据划出比例
@@ -328,21 +340,6 @@ export default {
         }
       }
       return stack.indexOf(index) >= 0
-    },
-
-    // 首页样式切换
-    transformIndex (index) {
-      if (index === this.tempdata.currentPage) {
-        let style = {}
-        style['transform'] = 'translate3D(' + this.tempdata.poswidth + 'px' + ',' + this.tempdata.posheight + 'px' + ',0px) ' + 'rotate(' + this.tempdata.rotate + 'deg)'
-        style['opacity'] = this.tempdata.opacity
-        style['zIndex'] = 10
-        if (this.tempdata.animation) {
-          style[this.tempdata.prefixes.transition + 'TimingFunction'] = 'ease'
-          style[this.tempdata.prefixes.transition + 'Duration'] = (this.tempdata.animation ? 300 : 0) + 'ms'
-        }
-        return style
-      }
     }
   }
 }
@@ -355,6 +352,7 @@ export default {
     perspective-origin: 50% 150%; //子元素透视位置
     margin: 0;
     padding: 0;
+    overflow: visible;
   }
 
   .stack-item{

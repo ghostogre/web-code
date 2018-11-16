@@ -83,10 +83,6 @@ export default {
   .name {
     font-size: 16px;
   }
-
-  p {
-    margin: 0;
-  }
 }
 
 </style>

@@ -6,7 +6,7 @@ import Vuex from 'vuex'
 import router from './router'
 import config from './vuex'
 import 'amfe-flexible'
-
+import 'normalize.css'
 import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload)
 
