@@ -1,8 +1,8 @@
 <template>
   <m-scroll class="column">
     <m-head></m-head>
-    <div id="slide-wrapper" class="column inner-wrapper">
-      <slide-card></slide-card>
+    <div id="slide-wrapper" class="column">
+      <slide-card class="slide"></slide-card>
     </div>
   </m-scroll>
 </template>
@@ -27,11 +27,12 @@ export default {
   #slide-wrapper {
     width: 100%;
     height: 450px;
+    overflow: hidden;
     justify-content: center;
     background-color: #565f77;
   }
-
-  .inner-wrapper {
-    overflow: hidden;
+  .slide {
+    width: 320px;
+    height: 320px;
   }
 </style>

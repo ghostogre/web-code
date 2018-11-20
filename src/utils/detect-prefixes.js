@@ -12,18 +12,15 @@ export default function detectPrefixes () {
     if (style[prop = 'webkitTransition'] === '') {
       transitionEnd = 'webkitTransitionEnd'
       transition = prop
-    }
-    if (style[prop = 'transition'] === '') {
+    } else if (style[prop = 'transition'] === '') {
       transitionEnd = 'transitionend'
       transition = prop
     }
     if (style[prop = 'webkitTransform'] === '') {
       transform = prop
-    }
-    if (style[prop = 'msTransform'] === '') {
+    } else if (style[prop = 'msTransform'] === '') {
       transform = prop
-    }
-    if (style[prop = 'transform'] === '') {
+    } else if (style[prop = 'transform'] === '') {
       transform = prop
     }
     // 为null时其效果与appendChild一样

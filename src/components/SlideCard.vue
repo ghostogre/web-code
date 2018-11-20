@@ -9,13 +9,12 @@
     @mousedown.stop.prevent="stop"
     @mouseup.stop.prevent="stop"
     @mousemove.stop.prevent="stop"
-    @mouseout.stop.prevent="stop"
-    :style="{width: width/px2rem + 'rem', height: height/px2rem + 'rem'}">
+    @mouseout.stop.prevent="stop">
     <li
       class="stack-item"
       v-for="(item, index) in pages"
       :key="index"
-      :style="[transform(index)]"
+      :style="transform(index)"
       @touchstart.capture.prevent="touchstart"
       @touchmove.capture.prevent="touchmove"
       @touchend.capture.prevent="touchend"
@@ -43,14 +42,6 @@ export default {
       default: function () {
         return {}
       }
-    },
-    width: {
-      type: Number,
-      default: 300
-    },
-    height: {
-      type: Number,
-      default: 300
     }
   },
   data () {
@@ -94,15 +85,11 @@ export default {
     }
   },
 
-  created () {
-    // 初始化大小
-  },
-
   computed: {
     ...mapGetters([
       'px2rem'
     ]),
-    // 划出面积 比例
+    // 划出面积比例
     offsetRatio () {
       // 直接获取dom会得到null, 父节点宽高不会变，没必要放在计算属性里面，先给个默认值！
       let width = this.parentWidth
@@ -112,7 +99,7 @@ export default {
       let ratio = 1 - (offsetWidth * offsetHeight) / (width * height) || 0
       return ratio > 1 ? 1 : ratio
     },
-    // 划出宽度 比例
+    // 划出宽度比例
     offsetWidthRatio () {
       let width = this.parentWidth
       let offsetWidth = width - Math.abs(this.tempdata.poswidth)
@@ -141,42 +128,46 @@ export default {
   methods: {
     stop () {
     },
+
     // 变换卡片
     transform (index) {
-      let currentPage = this.tempdata.currentPage
+      let tempdata = this.tempdata
+      let currentPage = tempdata.currentPage
       let length = this.pages.length
       // 设置上一张
       let lastPage = currentPage === 0 ? length - 1 : currentPage - 1
       let style = {}
-      let visible = this.tempdata.visible // 可见层数
+      let visible = tempdata.visible // 可见层数
+      let transform = tempdata.prefixes.transform
+      let transition = tempdata.prefixes.transition
       if (index === currentPage) { // 首页样式
-        style['transform'] = 'translate3D(' + this.tempdata.poswidth + 'px' + ',' + this.tempdata.posheight + 'px' + ',0px) ' + 'rotate(' + this.tempdata.rotate + 'deg)'
-        style['opacity'] = this.tempdata.opacity
+        style[transform] = `translate3d(${tempdata.poswidth}px, ${tempdata.posheight}px, 0px) rotate(${tempdata.rotate}deg)`
+        style['opacity'] = tempdata.opacity
         style['zIndex'] = 10
-        if (this.tempdata.animation) {
-          style[this.tempdata.prefixes.transition + 'TimingFunction'] = 'ease'
-          style[this.tempdata.prefixes.transition + 'Duration'] = (this.tempdata.animation ? 300 : 0) + 'ms'
+        if (tempdata.animation) {
+          style[transition + 'TimingFunction'] = 'ease'
+          style[transition + 'Duration'] = tempdata.animation ? '300ms' : '0ms'
         }
       } else if (this.findStack(index, currentPage)) { // 显示中图片
         let perIndex = index - currentPage > 0 ? index - currentPage : index - currentPage + length // 和前面间隔层数
         style['opacity'] = '1'
         // 根据划出比例
-        style['transform'] = `translate3D(0, 0, ${-1 * 60 * (perIndex - this.offsetRatio) / this.px2rem}rem)`
+        style[transform] = `translate3d(0, 0, ${-1 * 60 * (perIndex - this.offsetRatio) / this.px2rem}rem)`
         style['zIndex'] = visible - perIndex
-        if (!this.tempdata.tracking) {
+        if (!tempdata.tracking) {
           // 兼容前缀
-          style[this.tempdata.prefixes.transition + 'TimingFunction'] = 'ease'
-          style[this.tempdata.prefixes.transition + 'Duration'] = 300 + 'ms'
+          style[transition + 'TimingFunction'] = 'ease'
+          style[transition + 'Duration'] = '300ms'
         }
       } else if (index === lastPage) { // 设置翻过去的页的动画效果
-        style['transform'] = `translate3D(${this.tempdata.lastPosWidth}px, ${this.tempdata.lastPosHeight}px, 0px) rotate(${this.tempdata.lastRotate}deg)`
-        style['opacity'] = this.tempdata.lastOpacity
-        style['zIndex'] = this.tempdata.lastZindex
-        style[this.tempdata.prefixes.transition + 'TimingFunction'] = 'ease'
-        style[this.tempdata.prefixes.transition + 'Duration'] = 300 + 'ms'
+        style[transform] = `translate3d(${tempdata.lastPosWidth}px, ${tempdata.lastPosHeight}px, 0px) rotate(${tempdata.lastRotate}deg)`
+        style['opacity'] = tempdata.lastOpacity
+        style['zIndex'] = tempdata.lastZindex
+        style[transition + 'TimingFunction'] = 'ease'
+        style[transition + 'Duration'] = '300ms'
       } else {
         style['zIndex'] = '-1'
-        style['transform'] = `translate3D(0, 0, ${-1 * visible * 60 / this.px2rem}rem)`
+        style[transform] = `translate3d(0, 0, ${-1 * visible * 60 / this.px2rem}rem)`
       }
       return style
     },
@@ -244,8 +235,8 @@ export default {
         this.tempdata.opacity = 0
         this.tempdata.swipe = true
         this.nextTick()
-      // 不满足条件则滑入
       } else {
+        // 不满足条件则滑入
         this.tempdata.poswidth = 0
         this.tempdata.posheight = 0
         this.tempdata.swipe = false
@@ -284,32 +275,6 @@ export default {
       }
     },
 
-    prev () {
-      this.tempdata.tracking = false
-      this.tempdata.animation = true
-      // 计算划出后最终位置
-      let width = this.parentWidth
-      this.tempdata.poswidth = -width
-      this.tempdata.posheight = 0
-      this.tempdata.opacity = 0
-      this.tempdata.rotate = '-3'
-      this.tempdata.swipe = true
-      this.nextTick()
-    },
-
-    next () {
-      this.tempdata.tracking = false
-      this.tempdata.animation = true
-      // 计算划出后最终位置
-      let width = this.parentWidth
-      this.tempdata.poswidth = width
-      this.tempdata.posheight = 0
-      this.tempdata.opacity = 0
-      this.tempdata.rotate = '3'
-      this.tempdata.swipe = true
-      this.nextTick()
-    },
-
     // 翻转方向
     rotateDirection () {
       if (this.tempdata.poswidth <= 0) {
@@ -339,7 +304,7 @@ export default {
           stack.push(currentPage + i - length)
         }
       }
-      return stack.indexOf(index) >= 0
+      return stack.indexOf(index) !== -1
     }
   }
 }
@@ -349,28 +314,26 @@ export default {
   .stack {
     position: relative;
     perspective: 1000px; //子元素视距
+    touch-action: none;
     perspective-origin: 50% 150%; //子元素透视位置
-    margin: 0;
-    padding: 0;
-    overflow: visible;
+    transform: translate3d(0px, 0px, 0px);
   }
 
-  .stack-item{
+  .stack-item {
     position: absolute;
-    background: #fff;
     height: 100%;
     width: 100%;
     border-radius: 4px;
     text-align: center;
     overflow: hidden;
     user-select: none;
+    opacity: 0;
     // 控制着用户能否选中文本
     img {
       width: 100%;
       height: 100%;
-      display: block;
+      // display: block;
       pointer-events: none;
     }
   }
-
 </style>
