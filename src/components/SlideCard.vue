@@ -1,7 +1,7 @@
 <template>
   <ul
     class="stack column"
-    ref="mySlideStack"
+    ref="slideStack"
     @touchstart.stop.prevent="stop"
     @touchmove.stop.prevent="stop"
     @touchend.stop.prevent="stop"
@@ -109,16 +109,9 @@ export default {
   },
 
   mounted () {
-    // 绑定提供给外部调用的事件
-    this.$on('next', () => {
-      this.next()
-    })
-    this.$on('prev', () => {
-      this.prev()
-    })
     this.$nextTick(() => {
       // let parentNode = document.getElementById('#my-slide-stack').parentElement // 会有null的情况
-      let parentNode = this.$refs.mySlideStack.parentElement // 如果在普通的 DOM 元素上使用，引用指向的就是 DOM 元素；如果用在子组件上，引用就指向组件实例
+      let parentNode = this.$refs.slideStack.parentElement // 如果在普通的 DOM 元素上使用，引用指向的就是 DOM 元素；如果用在子组件上，引用就指向组件实例
       this.parentWidth = parentNode.offsetWidth * 1
       this.parentHeight = parentNode.offsetHeight * 1
       this.parentTop = parentNode.offsetTop * 1
@@ -173,6 +166,7 @@ export default {
     },
 
     touchmove (e) {
+      console.log('touch move')
       // 记录滑动位置
       if (this.tempdata.tracking && !this.tempdata.animation) {
         if (e.type === 'touchmove') { // 判断电脑和手机
@@ -193,6 +187,7 @@ export default {
     },
 
     touchstart (e) {
+      console.log('start touch')
       if (this.tempdata.tracking) {
         return
       }
@@ -225,6 +220,7 @@ export default {
     },
 
     touchend (e) {
+      console.log('end touch')
       this.tempdata.tracking = false
       this.tempdata.animation = true
       if (this.offsetRatio >= 0.4) {
@@ -313,16 +309,14 @@ export default {
 <style lang="scss" scoped>
   .stack {
     position: relative;
-    perspective: 1000px; //子元素视距
-    touch-action: none;
-    perspective-origin: 50% 150%; //子元素透视位置
-    transform: translate3d(0px, 0px, 0px);
+    perspective: 1000px; // 子元素视距
+    perspective-origin: 50% 150%; // 子元素透视位置
   }
 
   .stack-item {
     position: absolute;
-    height: 100%;
     width: 100%;
+    height: 100%;
     border-radius: 4px;
     text-align: center;
     overflow: hidden;
@@ -332,7 +326,6 @@ export default {
     img {
       width: 100%;
       height: 100%;
-      // display: block;
       pointer-events: none;
     }
   }
