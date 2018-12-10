@@ -19,6 +19,7 @@
     "better-scroll": "^1.13.2",
     "debug": "^4.1.0",
     "element": "^0.1.4",
+    "font-awesome": "^4.7.0",
     "hoek": "^5.0.4",
     "lodash": "^4.17.11",
     "normalize.css": "^8.0.1",
