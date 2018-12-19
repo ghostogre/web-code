@@ -14,7 +14,6 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "amfe-flexible": "^2.2.1",
     "babel-polyfill": "^6.26.0",
     "better-scroll": "^1.13.2",
     "debug": "^4.1.0",
@@ -23,7 +22,6 @@
     "hoek": "^5.0.4",
     "lodash": "^4.17.11",
     "normalize.css": "^8.0.1",
-    "postcss-px2rem": "^0.3.0",
     "pug": "^2.0.3",
     "vue": "^2.5.2",
     "vue-awesome-swiper": "^3.1.3",

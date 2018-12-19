@@ -26,35 +26,35 @@ export default {
 <style lang="scss" scoped>
 
 .m_layout {
-    min-width: 300px;
-    max-width: 640px;
-    margin: 0 auto;
-    position: relative;
-    height: 1000px;
+  min-width: 300px;
+  max-width: 640px;
+  margin: 0 auto;
+  position: relative;
+  height: 1000px;
 }
 
 .m_header {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 40px;
-    z-index: 2;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  z-index: 2;
 }
 
 .m_header .m_header_box {
-    position: relative;
-    min-width: 300px;
-    max-width: 640px;
-    height: 40px;
-    margin: 0 auto;
-    background: rgba(201, 21, 35, 0);
+  position: relative;
+  min-width: 300px;
+  max-width: 640px;
+  height: 80px;
+  margin: 0 auto;
+  background: rgba(201, 21, 35, 0);
 }
 
 .m_header_box {
   .icon_logo {
     width: 60px;
-    height: 36px;
+    height: 72px;
     position: absolute;
     top: 4px;
     left: 10px;
@@ -64,23 +64,23 @@ export default {
 
   form {
     width: 100%;
-    height: 40px;
+    height: 80px;
     padding-left: 75px;
     padding-right: 60px;
     position: relative;
     .icon_search {
-        display: block;
-        font-size: 18px;
-        position: absolute;
-        left: 85px;
-        top: 12px;
-        background-position: -60px -109px;
+      display: block;
+      font-size: 18px;
+      position: absolute;
+      left: 85px;
+      top: 12px;
+      background-position: -60px -109px;
     }
   }
 
   .search {
     width: 100%;
-    height: 30px;
+    height: 60px;
     border-radius: 15px;
     margin-top: 5px;
     padding-left: 30px;
