@@ -20,7 +20,6 @@
     "element": "^0.1.4",
     "font-awesome": "^4.7.0",
     "hoek": "^5.0.4",
-    "lib-flexible": "^0.3.2",
     "lodash": "^4.17.11",
     "normalize.css": "^8.0.1",
     "pug": "^2.0.3",
