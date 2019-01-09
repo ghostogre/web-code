@@ -6,6 +6,7 @@ import Vuex from 'vuex'
 import router from './router'
 import config from './vuex'
 import 'normalize.css'
+import './assets/js/rem.js'
 import 'font-awesome/css/font-awesome.min.css'
 import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload)
