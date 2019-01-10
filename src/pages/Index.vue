@@ -1,15 +1,18 @@
 <template>
   <div>
-    <home-head></home-head>
+    <router-view/>
+    <tabbar></tabbar>
   </div>
 </template>
 
 <script>
-import HomeHead from '@/components/HomeHead.vue'
+import Tabbar from '@/components/Tabbar.vue'
+import Scroll from '@/components/Scroll.vue'
 export default {
   name: 'Index',
   components: {
-    HomeHead
+    Tabbar,
+    Scroll
   },
   methods: {
   }

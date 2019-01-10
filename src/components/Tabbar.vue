@@ -1,0 +1,71 @@
+<template>
+  <footer id="commonNav">
+    <template v-for="n in tabbar">
+      <router-link :to="n.path" :key="n.path">
+        <div class="icon-center">
+          <img class="nav-img" :src="n.img"/>
+        </div>
+      </router-link>
+    </template>
+  </footer>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      tabbar: [
+        {
+          path: '../home',
+          img: require('../assets/images/tabbar/home.png')
+        },
+        {
+          path: 'type',
+          img: require('../assets/images/tabbar/type.png')
+        },
+        {
+          path: 'discover',
+          img: require('../assets/images/tabbar/discover.png')
+        },
+        {
+          path: 'cart',
+          img: require('../assets/images/tabbar/cart.png')
+        },
+        {
+          path: 'mine',
+          img: require('../assets/images/tabbar/login.png')
+        }
+      ]
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+#commonNav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 32px;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  user-select: none;
+  background-color: rgb(213, 20, 51);
+}
+
+.icon-center {
+  width: 150px;
+  height: 100px;
+  img {
+    height: 100%;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.nav-img {
+  vertical-align: bottom;
+}
+</style>
