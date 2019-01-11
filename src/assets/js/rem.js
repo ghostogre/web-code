@@ -3,7 +3,7 @@
   let scale = 1 / dpr
   let meta = doc.createElement('meta')
   meta.setAttribute('name', 'viewport')
-  meta.setAttribute('content', `initial-scale=${scale}, maximum-scale=${scale}, minimum-scale=${scale}, width=device-width, user-scalable=no`)
+  meta.setAttribute('content', `width=device-width, initial-scale=${scale}, maximum-scale=${scale}, minimum-scale=${scale}, user-scalable=no, minimal-ui`)
   let docEl = doc.documentElement
   if (docEl.firstElementChild) {
     docEl.firstElementChild.appendChild(meta)

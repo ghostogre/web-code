@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="pages">
     <router-view/>
     <tabbar></tabbar>
   </div>
@@ -7,12 +7,10 @@
 
 <script>
 import Tabbar from '@/components/Tabbar.vue'
-import Scroll from '@/components/Scroll.vue'
 export default {
   name: 'Index',
   components: {
-    Tabbar,
-    Scroll
+    Tabbar
   },
   methods: {
   }
@@ -20,5 +18,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+#pages {
+  width: 100%;
+  height: 100vh;
+  padding-bottom: 100px;
+}
 </style>
