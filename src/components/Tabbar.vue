@@ -53,6 +53,7 @@ export default {
   display: flex;
   user-select: none;
   background-color: rgb(213, 20, 51);
+  box-shadow: 0 0 10px 0 hsla(0,6%,58%,.6);
 }
 
 .icon-center {

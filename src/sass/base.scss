@@ -26,3 +26,9 @@ body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, l
     outline: none;
   }
 }
+
+.clear:after {
+  content: "";
+  height: 0;
+  clear: both;
+}
