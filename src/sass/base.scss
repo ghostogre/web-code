@@ -32,3 +32,12 @@ body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, l
   height: 0;
   clear: both;
 }
+
+
+@mixin h5 {
+  font-size: 28px;
+}
+
+@mixin h6 {
+  font-size: 24px;
+}

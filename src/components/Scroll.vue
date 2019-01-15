@@ -72,6 +72,20 @@ export default {
     refreshDelay: {
       type: Number,
       default: 20
+    },
+    /**
+     * 是否派发列表滚动开始的事件
+    */
+    scrollStart: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * 是否派发列表滚动结束的事件
+     */
+    scrollEnd: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {
@@ -89,7 +103,8 @@ export default {
       this.scroll = new BScroll(this.$refs.wrapper, {
         probeType: this.probeType,
         click: this.click,
-        scrollX: this.scrollX
+        scrollX: this.scrollX,
+        scrollY: true
       })
 
       // 是否派发滚动事件
@@ -123,6 +138,20 @@ export default {
       if (this.beforeScroll) {
         this.scroll.on('beforeScrollStart', () => {
           this.$emit('beforeScroll')
+        })
+      }
+
+      // 是否派发列表开始滚动的事件
+      if (this.scrollStart) {
+        this.scroll.on('scrollStart', () => {
+          this.$emit('scrollStart')
+        })
+      }
+
+      // 是否派发列表结束滚动的事件
+      if (this.scrollEnd) {
+        this.scroll.on('scrollEnd', (pos) => {
+          this.$emit('scrollEnd', pos)
         })
       }
     },

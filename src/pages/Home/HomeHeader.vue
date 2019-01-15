@@ -1,5 +1,5 @@
 <template>
-  <header class="h-header">
+  <header :class="['h-header', opacity? 'header-1': 'header-2']">
     <i class="fa fa-navicon navicon white"></i>
     <div class="h-header-box">
       <i class="jd-header"></i>
@@ -14,6 +14,10 @@
 <script>
 export default {
   name: 'mhead',
+  props: {
+    opacity: Number,
+    default: 0
+  },
   methods: {
     search (e) {
     }
@@ -36,6 +40,14 @@ export default {
     top: 26px;
     right: 30px;
   }
+}
+
+.header-1 {
+  background: #e43130;
+}
+
+.header-2 {
+  background: transparent;
 }
 
 .jd-header {
