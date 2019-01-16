@@ -1,17 +1,17 @@
 (function (doc, win) {
-  let dpr = window.devicePixelRatio || 1
-  let scale = 1 / dpr
-  let meta = doc.createElement('meta')
-  meta.setAttribute('name', 'viewport')
-  meta.setAttribute('content', `width=device-width, initial-scale=${scale}, maximum-scale=${scale}, minimum-scale=${scale}, user-scalable=no, minimal-ui`)
+  // let dpr = window.devicePixelRatio || 1
+  // let scale = 1 / dpr
+  // let meta = doc.createElement('meta')
+  // meta.setAttribute('name', 'viewport')
+  // meta.setAttribute('content', `width=device-width, initial-scale=${scale}, maximum-scale=${scale}, minimum-scale=${scale}, user-scalable=no, minimal-ui`)
   let docEl = doc.documentElement
-  if (docEl.firstElementChild) {
-    docEl.firstElementChild.appendChild(meta)
-  } else {
-    var wrap = doc.createElement('div')
-    wrap.appendChild(meta)
-    document.write(wrap.innerHTML)
-  }
+  // if (docEl.firstElementChild) {
+  //   docEl.firstElementChild.appendChild(meta)
+  // } else {
+  //   var wrap = doc.createElement('div')
+  //   wrap.appendChild(meta)
+  //   document.write(wrap.innerHTML)
+  // }
   let resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize'
   let recalc = function () {
     let clientWidth = docEl.clientWidth

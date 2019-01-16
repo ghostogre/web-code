@@ -45,7 +45,7 @@ export default {
 .swiper-img {
   width: 750px;
   height: 360px;
-  clip: rect(00px, 750px, 360px, 0px); // 一般设计师不会给你需要裁剪大小的图
+  clip: rect(0, 750px, 360px, 0px); // 一般设计师不会给你需要裁剪大小的图
   // object-fit: cover;
 }
 

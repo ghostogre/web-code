@@ -8,6 +8,15 @@
         <li class="similar-li relative" :key="n.id">
           <div class="similar-good floor">
             <img class="similar-posre" :src="n.img_url"/>
+            <span class="similar-product-text ellipsis-2">
+              {{n.title}}
+            </span>
+            <p class="similar-product-info relative">
+              <span class="similar-product-price">
+                ¥<span class="big-price">{{n.price || 0}}</span>
+              </span>
+              <span class="guess-button">看相似</span>
+            </p>
           </div>
         </li>
       </template>
@@ -91,4 +100,58 @@ export default {
   height: 373px;
   clip: rect(0, 373px, 375px, 0);
 }
+
+.similar-product-info {
+  font-size: 26px;
+}
+
+.similar-product-text {
+  height: 64px;
+  font-size: 26px;
+  padding: 0 8px;
+  line-height: 32px;
+  margin: 10px 0 6px 0;
+  color: #232326;
+}
+
+.similar-product-price {
+  color: #f23030;
+  display: inline-block;
+  padding: 0 10px;
+  position: relative;
+  height: 50px;
+  line-height: 50px;
+  .big-price {
+    @include h4();
+    color: #f23030;
+  }
+}
+
+.guess-button {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 16px;
+  text-align: center;
+  color: #686868;
+  @include h6();
+  width: 100px;
+  height: 48px;
+  line-height: 48px;
+
+  &:after {
+    // 处理1px问题
+    content: "";
+    width: 200%;
+    height: 200%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid #bfbfbf;/*no*/
+    border-radius: 8px;
+    transform: scale(.5, .5);
+    transform-origin: top left;
+  }
+}
+
 </style>

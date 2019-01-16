@@ -10,7 +10,7 @@
       </ul>
       <div>
         <!-- 后台生成的优惠券图片 -->
-        <img src="http://m.360buyimg.com/mobilecms/s750x230_jfs/t1/22611/26/4960/50312/5c3848fdEc2fb2101/4d818b0b63928ad1.png!q70.jpg.dpg"/>
+        <img class="floor" src="http://m.360buyimg.com/mobilecms/s750x230_jfs/t1/22611/26/4960/50312/5c3848fdEc2fb2101/4d818b0b63928ad1.png!q70.jpg.dpg"/>
       </div>
     </section>
 
@@ -51,7 +51,7 @@ export default {
           name: '京东超市'
         },
         {
-          icon: require('../../assets/images/dpg/haitunquanqiu.png'),
+          icon: require('../../assets/images/home/haitunquanqiu.png'),
           name: '海屯全球'
         },
         {

@@ -14,6 +14,7 @@ img {
 .fit {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .flex-1 {
@@ -28,6 +29,15 @@ img {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.ellipsis-2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .column {
