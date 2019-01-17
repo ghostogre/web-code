@@ -5,6 +5,7 @@
     <scroll
       :data="data"
       class="fit"
+      ref="scroll"
       :probeType="2"
       :listenScroll="true"
       @scroll="scrollEvent">
@@ -48,29 +49,25 @@ export default {
           id: 1,
           img_url: 'http://img12.360buyimg.com/mobilecms/s372x372_jfs/t1/27823/18/5000/325555/5c370577E8992b2f7/f4e27ce99a57d800.jpg!q70.dpg',
           title: '天艺液晶手写板 彩色光能小黑板 儿童涂鸦 电子手绘板 办公留言便签 手稿绘画板 草稿写字板 练字板 8.5英寸红色 单色笔触',
-          price: 269,
-          is_reduce: 1
+          price: 269
         },
         {
           id: 2,
           img_url: 'http://img12.360buyimg.com/mobilecms/s372x372_jfs/t1/27823/18/5000/325555/5c370577E8992b2f7/f4e27ce99a57d800.jpg!q70.dpg',
           title: '天艺液晶手写板 彩色光能小黑板 儿童涂鸦 电子手绘板 办公留言便签 手稿绘画板 草稿写字板 练字板 8.5英寸红色 单色笔触',
-          price: 269,
-          is_reduce: 1
+          price: 269
         },
         {
           id: 3,
           img_url: 'http://img12.360buyimg.com/mobilecms/s372x372_jfs/t1/27823/18/5000/325555/5c370577E8992b2f7/f4e27ce99a57d800.jpg!q70.dpg',
           title: '天艺液晶手写板 彩色光能小黑板 儿童涂鸦 电子手绘板 办公留言便签 手稿绘画板 草稿写字板 练字板 8.5英寸红色 单色笔触',
-          price: 269,
-          is_reduce: 1
+          price: 269
         },
         {
           id: 4,
           img_url: 'http://img12.360buyimg.com/mobilecms/s372x372_jfs/t1/27823/18/5000/325555/5c370577E8992b2f7/f4e27ce99a57d800.jpg!q70.dpg',
           title: '天艺液晶手写板 彩色光能小黑板 儿童涂鸦 电子手绘板 办公留言便签 手稿绘画板 草稿写字板 练字板 8.5英寸红色 单色笔触',
-          price: 269,
-          is_reduce: 1
+          price: 269
         }
       ],
       navopacity: 0,
@@ -78,6 +75,7 @@ export default {
     }
   },
   methods: {
+    // 滚动时的计算
     scrollEvent (pos) {
       let y = pos.y
       if (y < -30 && this.navopacity === 0) {
@@ -85,15 +83,18 @@ export default {
       } else if (y >= -30 && this.navopacity === 1) {
         this.navopacity = 0
       }
-      if (y < -30 && y >= -400 && this.show) {
+      if (y < -30 && y >= -300 && this.show) {
         this.show = false
-      } else if (y < -400 && (!this.show)) {
+      } else if (y < -300 && (!this.show)) {
         this.show = true
       }
     },
     // 回到顶部
     scrollTop () {
-
+      this.$nextTick(() => {
+        this.show = false
+        this.$refs.scroll.scrollTo(0, 0)
+      })
     }
   }
 }

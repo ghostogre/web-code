@@ -3,7 +3,7 @@
     <template v-for="n in tabbar">
       <router-link :to="n.path" :key="n.path">
         <div class="icon-center">
-          <img class="nav-img" :src="n.img"/>
+          <img class="nav-img" :src="$route.name === n.name && n.img1? n.img1: n.img"/>
         </div>
       </router-link>
     </template>
@@ -16,23 +16,30 @@ export default {
     return {
       tabbar: [
         {
-          path: '../home',
-          img: require('../assets/images/tabbar/home.png')
+          path: 'home',
+          name: 'home',
+          img: require('../assets/images/tabbar/home.png'),
+          img1: require('../assets/images/tabbar/home-2.png')
         },
         {
           path: 'type',
-          img: require('../assets/images/tabbar/type.png')
+          name: 'type',
+          img: require('../assets/images/tabbar/type.png'),
+          img1: require('../assets/images/tabbar/type-2.png')
         },
         {
           path: 'discover',
+          name: 'discover',
           img: require('../assets/images/tabbar/discover.png')
         },
         {
           path: 'cart',
+          name: 'cart',
           img: require('../assets/images/tabbar/cart.png')
         },
         {
           path: 'mine',
+          name: 'mine',
           img: require('../assets/images/tabbar/login.png')
         }
       ]

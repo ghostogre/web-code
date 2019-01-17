@@ -104,7 +104,8 @@ export default {
         probeType: this.probeType,
         click: this.click,
         scrollX: this.scrollX,
-        scrollY: true
+        scrollY: true,
+        bounce: false
       })
 
       // 是否派发滚动事件

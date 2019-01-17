@@ -81,8 +81,23 @@ export default {
     }
   }
   .more {
+    position: relative;
     padding: 0 0 0 12px;
-    border-left: 1px solid #666;/*no*/
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1px;/*no*/
+      height: 100%;
+      background-color: #666;
+      @media (-webkit-min-device-pixel-ratio: 2) {
+        transform: scaleX(.5);
+      }
+      @media (-webkit-min-device-pixel-ratio: 3) {
+        transform: scaleX(.33);
+      }
+    }
   }
 }
 </style>
