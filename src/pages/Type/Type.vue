@@ -10,7 +10,7 @@
         <scroll class="fit">
           <ul>
             <template v-for="(t, index) in category">
-              <li :class="['ellipsis', {'cur': index === currentTab}]" :key="t.title" @click.stop="changeCategory(index)">
+              <li :class="['ellipsis', {'cur': index === currentTab}]" :key="t.title" @touch.self="changeCategory">
                 {{t.title}}
               </li>
             </template>
@@ -61,10 +61,10 @@ export default {
     }
   },
   methods: {
-    changeCategory (index) {
-      this.currentTab = index
-      this.categoryItem = this.category[index]
-      console.log(index)
+    changeCategory (e) {
+      console.log(e)
+      // this.currentTab = index
+      // this.categoryItem = this.category[index]
     }
   }
 }

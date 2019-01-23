@@ -1,5 +1,5 @@
 <template>
-  <footer id="commonNav" @click.capture="stop">
+  <footer id="commonNav" @touch.prevent="stop">
     <template v-for="n in tabbar">
       <router-link :to="n.path" :key="n.path">
         <div class="icon-center">
