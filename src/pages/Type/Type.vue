@@ -9,15 +9,36 @@
       <div class="first-list">
         <scroll class="fit">
           <ul>
-            <li class="ellipsis"></li>
+            <template v-for="(t, index) in category">
+              <li :class="['ellipsis', {'cur': index === currentTab}]" :key="t.title" @click.stop="changeCategory(index)">
+                {{t.title}}
+              </li>
+            </template>
           </ul>
         </scroll>
       </div>
       <div class="second-list">
         <scroll class="fit">
-          <ul>
-            <li></li>
-          </ul>
+          <div class="promotion">
+            <a :href="categoryItem.promotion_href">
+              <img class="promotion-image" :src="categoryItem.promotion_image"/>
+            </a>
+            <template v-for="m in categoryItem.list">
+              <div :key="m.title">
+                <h4>{{m.title}}</h4>
+                <ul>
+                  <template v-for="c in m.list">
+                    <li class="category_li" :key="c.name">
+                      <a :href="c.category_href">
+                        <img :src="c.category_image"/>
+                        <span class="ellipsis-2">{{c.category_name}}</span>
+                      </a>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+            </template>
+          </div>
         </scroll>
       </div>
     </section>
@@ -25,6 +46,7 @@
 </template>
 
 <script>
+import category from '../../../data/category.json'
 import Scroll from '@/components/Scroll.vue'
 export default {
   name: 'type',
@@ -33,6 +55,16 @@ export default {
   },
   data () {
     return {
+      category,
+      currentTab: 0,
+      categoryItem: category[0]
+    }
+  },
+  methods: {
+    changeCategory (index) {
+      this.currentTab = index
+      this.categoryItem = this.category[index]
+      console.log(index)
     }
   }
 }
@@ -57,6 +89,8 @@ export default {
 
 .list {
   width: 100%;
+  display: flex;
+  overflow: hidden;
 }
 
 .first-list {
@@ -66,11 +100,51 @@ export default {
   float: left;
   overflow: hidden;
   background-color: #f8f8f8;
+  li {
+    text-align: center;
+    line-height: 92px;
+    height: 92px;
+    @include h6();
+  }
+  .cur {
+    background-color: white;
+  }
 }
 
 .second-list {
-  width: 100%;
+  flex: 1;
+  font-size: 0;
   height: 100%;
-  padding-left: 172px;
+  overflow: hidden;
+  .promotion {
+    overflow: hidden;
+    padding: 15px;
+    .promotion-image {
+      width: 100%;
+      height: 210px;
+    }
+    h4 {
+      color: #333;
+      line-height: 75px;
+      font-weight: 600;
+      @include h5();
+    }
+  }
+}
+
+.category_li {
+  width: 32.8%;
+  float: left;
+  text-align: center;
+  img {
+    width: 140px;
+    height: 140px;
+  }
+  span {
+    color: #333;
+    height: 70px;
+    margin-top: 4px;
+    @include h6();
+  }
 }
 </style>

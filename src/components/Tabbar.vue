@@ -1,5 +1,5 @@
 <template>
-  <footer id="commonNav">
+  <footer id="commonNav" @click.capture="stop">
     <template v-for="n in tabbar">
       <router-link :to="n.path" :key="n.path">
         <div class="icon-center">
@@ -43,6 +43,10 @@ export default {
           img: require('../assets/images/tabbar/login.png')
         }
       ]
+    }
+  },
+  methods: {
+    stop () {
     }
   }
 }
