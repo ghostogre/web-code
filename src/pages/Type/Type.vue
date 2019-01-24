@@ -20,9 +20,11 @@
       <div class="second-list">
         <scroll class="fit">
           <div class="promotion">
-            <a :href="categoryItem.promotion_href">
-              <img class="promotion-image" :src="categoryItem.promotion_image"/>
-            </a>
+            <template v-if="categoryItem.promotion_href">
+              <a :href="categoryItem.promotion_href">
+                <img class="promotion-image" :src="categoryItem.promotion_image"/>
+              </a>
+            </template>
             <template v-for="m in categoryItem.list">
               <div :key="m.title">
                 <h4>{{m.title}}</h4>
@@ -121,6 +123,10 @@ export default {
     .promotion-image {
       width: 100%;
       height: 210px;
+    }
+    ul {
+      width: 100%;
+      overflow: hidden;
     }
     h4 {
       color: #333;
