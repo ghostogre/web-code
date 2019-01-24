@@ -1,5 +1,8 @@
 <template>
   <main>
+    <!-- 禁止chrome自动填充，会自动填充到隐藏的input里面 -->
+    <input style="display:none;" type="text" name="username"/>
+    <input style="display:none;" type="password" name="password"/>
     <header class="navigation relative">
       <i class="fa fa-angle-left back-icon"></i>
       <span class="title">京东登录</span>
