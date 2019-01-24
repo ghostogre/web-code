@@ -1,6 +1,6 @@
 <template>
   <main>
-    <!-- 禁止chrome自动填充，会自动填充到隐藏的input里面 -->
+    <!-- 禁止chrome自动填充，会自动填充到隐藏的input里面，加上autocomplete='off' -->
     <input style="display:none;" type="text" name="username"/>
     <input style="display:none;" type="password" name="password"/>
     <header class="navigation relative">
@@ -8,6 +8,7 @@
       <span class="title">京东登录</span>
     </header>
     <section class="page">
+      <router-link to="mine" class="btn btn-active">登 录</router-link>
     </section>
   </main>
 </template>
@@ -43,5 +44,22 @@ export default {
 .page {
   width: 100%;
   padding: 0 50px 50px;
+}
+
+.btn {
+  width: 100%;
+  height: 90px;
+  line-height: 90px;
+  background-color: #efefef;
+  border-radius: 45px;
+  color: white;
+  text-align: center;
+  @include h5();
+  display: block;
+  background-image: linear-gradient(90deg, #fab3b3, #ffbcb3 73%, #ffcaba);
+}
+
+.btn-active {
+  background-image: linear-gradient(90deg, #f10000, #ff2000 73%, #ff4f18);
 }
 </style>
