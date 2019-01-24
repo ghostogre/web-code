@@ -4,6 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const Index = () => import('../pages/Index.vue')
+const Login = () => import('../pages/Login/Login.vue')
 const Home = () => import('../pages/Home/Home.vue')
 const Type = () => import('../pages/Type/Type.vue')
 const Discover = () => import('../pages/Discover/Discover.vue')
@@ -47,6 +48,11 @@ export default new Router({
       path: '/mine',
       name: 'mine',
       component: Mine
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     },
     {
       path: '*',

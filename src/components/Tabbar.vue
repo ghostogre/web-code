@@ -1,5 +1,5 @@
 <template>
-  <footer id="commonNav" @touch.prevent="stop">
+  <footer id="commonNav">
     <template v-for="n in tabbar">
       <router-link :to="n.path" :key="n.path">
         <div class="icon-center">
@@ -38,15 +38,11 @@ export default {
           img: require('../assets/images/tabbar/cart.png')
         },
         {
-          path: 'mine',
-          name: 'mine',
+          path: 'login',
+          name: 'login',
           img: require('../assets/images/tabbar/login.png')
         }
       ]
-    }
-  },
-  methods: {
-    stop () {
     }
   }
 }
