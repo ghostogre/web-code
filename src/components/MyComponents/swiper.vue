@@ -4,10 +4,9 @@
 
 <script>
 export default {
-  name: 'Index'
+  name: 'swiper'
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>

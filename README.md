@@ -2,4 +2,4 @@
 
 > Yingjh
 
-vue全家桶项目
+**Vue.js, Vuex, Vue-Router**
